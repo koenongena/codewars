@@ -25,33 +25,74 @@
  *
  */
 
-const tenth = (x) => Math.floor((x / 10)) % 10 * 10;
+const tenth = (x) => Math.floor((x / 10)) % 10;
 const unit = y => y % 10;
 
 function handleUnitDigit1(x, y) {
-    return ((tenth(x) * unit(y)) + 1) % 100;
+    return ((tenth(x) * 10 * unit(y)) + 1) % 100;
 }
 
-function handleUnitDigit9(x, y) {
-    if (y % 2 === 0) {
-        return twoLastDigits(x ** 2, y / 2) % 100;
+const handleBaseRaise = (raise) => (x, y) => {
+    if (y < raise) {
+        return (x ** y) % 100;
     } else {
-        return twoLastDigits(x, (y - 1)) * x % 100;
+        return (twoLastDigits(x ** raise, Math.floor(y / raise)) * twoLastDigits(x, y % raise)) % 100;
     }
 }
+const handleUnitDigit9 = handleBaseRaise(2);
+const handleUnitDigit3 = handleBaseRaise(4);
+const handleUnitDigit7 = handleBaseRaise(4);
+
+const handleUnitDigit2 = (x, y) => {
+    if (y < 10) {
+        return Math.pow(x, y) % 100;
+    }
+
+    return twoLastDigits(24, Math.floor(y / 10)) * twoLastDigits(2, y % 10) % 100;
+};
+
+const isOdd = x => x % 2 === 1;
+const isEven = x => x % 2 === 0;
+
+const handleUnitDigit5 = (x, y) => {
+    if (isOdd(tenth(x)) && isOdd(y)) {
+        return 75;
+    } else {
+        return 25;
+    }
+};
 
 const twoLastDigits = (x, y) => {
     if (y === 0) {
         return 1;
     } else if (y === 1) {
         return x;
+    } else if (x === 24 && isOdd(y)) {
+        return 24;
+    } else if (x === 24 && isEven(y)) {
+        return 76;
+    } else if (x === 76) {
+        return 76;
     }
 
     switch (x % 10) {
+        case 0:
+            return 0;
         case 1:
             return handleUnitDigit1(x, y);
         case 9:
             return handleUnitDigit9(x, y);
+        case 3:
+            return handleUnitDigit3(x, y);
+        case 7:
+            return handleUnitDigit7(x, y);
+        case 2:
+        case 4:
+        case 6:
+        case 8:
+            return handleUnitDigit2(2, y) * twoLastDigits(x / 2, y) % 100;
+        case 5:
+            return handleUnitDigit5(x, y);
         default:
             return undefined;
     }

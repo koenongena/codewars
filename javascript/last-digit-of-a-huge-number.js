@@ -25,19 +25,36 @@
  *
  */
 
+const tenth = (x) => Math.floor((x / 10)) % 10 * 10;
+const unit = y => y % 10;
+
+function handleUnitDigit1(x, y) {
+    return ((tenth(x) * unit(y)) + 1) % 100;
+}
+
+function handleUnitDigit9(x, y) {
+    if (y % 2 === 0) {
+        return twoLastDigits(x ** 2, y / 2) % 100;
+    } else {
+        return twoLastDigits(x, (y - 1)) * x % 100;
+    }
+}
+
 const twoLastDigits = (x, y) => {
-    if (x === '0' && y === '0') {
+    if (y === 0) {
         return 1;
+    } else if (y === 1) {
+        return x;
     }
 
-    const xTensPlaceDigit = x.length > 1 ? parseInt(x.slice(-2, 1)) : 0;
-    const xUnitDigit = parseInt(x.slice(-1));
-    const yUnitDigit = parseInt(y.slice(-1));
-    if (xUnitDigit === 1) {
-        return ((xTensPlaceDigit * yUnitDigit) * 10 + 1) % 100;
+    switch (x % 10) {
+        case 1:
+            return handleUnitDigit1(x, y);
+        case 9:
+            return handleUnitDigit9(x, y);
+        default:
+            return undefined;
     }
-
-    return undefined;
 };
 
 module.exports = {

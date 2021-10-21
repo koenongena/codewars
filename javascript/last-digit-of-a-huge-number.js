@@ -36,7 +36,7 @@ const handleBaseRaise = (raise) => (x, y) => {
     if (y < raise) {
         return (x ** y) % 100;
     } else {
-        return (twoLastDigits(x ** raise, Math.floor(y / raise)) * twoLastDigits(x, y % raise)) % 100;
+        return (twoLastDigits((x % 100) ** raise, Math.floor(y / raise)) * twoLastDigits(x % 100, y % raise)) % 100;
     }
 }
 const handleUnitDigit9 = handleBaseRaise(2);
@@ -48,7 +48,7 @@ const handleUnitDigit2 = (x, y) => {
         return Math.pow(x, y) % 100;
     }
 
-    return twoLastDigits(24, Math.floor(y / 10)) * twoLastDigits(2, y % 10) % 100;
+    return twoLastDigits(24, Math.floor(y / 10)) * Math.pow(2, y % 10) % 100;
 };
 
 const isOdd = x => x % 2 === 1;
@@ -63,6 +63,7 @@ const handleUnitDigit5 = (x, y) => {
 };
 
 const twoLastDigits = (x, y) => {
+    console.log(x, y);
     if (y === 0) {
         return 1;
     } else if (y === 1) {
@@ -98,6 +99,23 @@ const twoLastDigits = (x, y) => {
     }
 };
 
+function twoLastDigitsOfArray(arr) {
+    if ((arr || []).length === 0) {
+        return 1;
+    } else if (arr.length === 2) {
+        const [x, y] = arr;
+        return twoLastDigits(x, y);
+    } else {
+        const [x, ...other] = arr;
+        return twoLastDigits(x, twoLastDigitsOfArray(other));
+    }
+}
+
+function lastDigit(arr) {
+    return twoLastDigitsOfArray(arr) % 10;
+}
+
 module.exports = {
-    twoLastDigits
+    twoLastDigits,
+    lastDigit
 }

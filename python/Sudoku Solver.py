@@ -99,3 +99,16 @@ def test_solve_sudoku(unsolved_board):
                 [3, 4, 5, 2, 8, 6, 1, 7, 9]]
 
     assert sudoku(unsolved_board) == solution
+
+def test_solve_hard_sudoku():
+    problem = [[9, 0, 0, 0, 8, 0, 0, 0, 1],
+               [0, 0, 0, 4, 0, 6, 0, 0, 0],
+               [0, 0, 5, 0, 7, 0, 3, 0, 0],
+               [0, 6, 0, 0, 0, 0, 0, 4, 0],
+               [4, 0, 1, 0, 6, 0, 5, 0, 8],
+               [0, 9, 0, 0, 0, 0, 0, 2, 0],
+               [0, 0, 7, 0, 3, 0, 2, 0, 0],
+               [0, 0, 0, 7, 0, 5, 0, 0, 0],
+               [1, 0, 0, 0, 4, 0, 0, 0, 7]]
+
+    assert sudoku(problem) == None
